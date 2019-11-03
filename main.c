@@ -5,21 +5,18 @@ int main(int argc, char* argv[]) {
     int clock_curr = 0;
     int n = 0;
     
-    int *process_size_per_page = malloc(sizeof(int)*4); // Page size per process allotted
-    process_size_per_page[0] = 5;
-    process_size_per_page[1] = 11;
-    process_size_per_page[2] = 17;
-    process_size_per_page[3] = 31;
+    int *processSizePerPage = malloc(sizeof(int)*4);
+    processSizePerPage[0] = 5;
+    processSizePerPage[1] = 11;
+    processSizePerPage[2] = 17;
+    processSizePerPage[3] = 31;
 
-    for(int i=0;i<5;i++) display_state[i] = malloc(3); // stages of execution pipeline
-    display_state[0] = "RU";
-    display_state[1] = "WA";
-    display_state[2] = "FI";
-    display_state[3] = "RE";
-    display_state[4] = "PE";
-
-
-
+    for(int i=0;i<5;i++) displayState[i] = malloc(3);
+    displayState[0] = "RU";
+    displayState[1] = "WA";
+    displayState[2] = "FI";
+    displayState[3] = "RE";
+    displayState[4] = "PE";
 
     page *curr_page;
 
@@ -56,20 +53,18 @@ int main(int argc, char* argv[]) {
         create_page_list(&list);
         process Q[NUMBER_OF_TASKS];
 
-        // initializing tasks with random arrival time, page size, and service_time
         for(int i=0;i<NUMBER_OF_TASKS;i++) {
             Q[i].pid = i;
-            Q[i].page_num = process_size_per_page[rand()%4]; 
+            Q[i].page_num = processSizePerPage[rand()%4]; 
             Q[i].arrival_time = rand()%60;
             Q[i].service_time = rand() % 7;
-            Q[i].curr_page = 0; // all processes begin with page 0
+            Q[i].curr_page = 0; 
             Q[i].state = READY;
         }
 
-        // Sorting tasks according to arrival times
         qsort(Q,NUMBER_OF_TASKS,sizeof(process), sort_by_arrival_times);
 
-        int curr_q_ptr = 0; // current process queue pointer, starts at head
+        int curr_q_ptr = 0; 
         for(clock_curr = 0; clock_curr < 60; clock_curr++) {
             printf("\ntime: %d:\n", clock_curr);
 
@@ -116,7 +111,7 @@ int main(int argc, char* argv[]) {
                         }else if (curr_page->state == LOADING) {
                             Q[j].io_count--;
                             printf("pid: %03d, page_count %03d, arrival_time %02d, service_time %.2f, curr_page %03d, state %s, io_count %d\n",
-                            Q[j].pid, Q[j].page_num, Q[j].arrival_time, Q[j].service_time, Q[j].curr_page, display_state[Q[j].state], Q[j].io_count);
+                            Q[j].pid, Q[j].page_num, Q[j].arrival_time, Q[j].service_time, Q[j].curr_page, displayState[Q[j].state], Q[j].io_count);
                             if (Q[j].io_count <= 0){
                                 curr_page->first_access = clock_curr+(0.1*i);
                                 curr_page->state = IN_MEM;

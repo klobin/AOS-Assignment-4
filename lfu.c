@@ -1,18 +1,18 @@
 #include "paging.h"
 
 void run_LFU(page_list* list) {
-    page* curr = list->head;
-    page* page_to_remove = list->head;
-    int min = curr->count;
-    while(curr) {
-        if(curr->count < min){
-            page_to_remove = curr;
-            min = curr->count;
+    page* pageCurrent = list->head;
+    page* pageMarkedToRemove = list->head;
+    int min = pageCurrent->count;
+    while(pageCurrent) {
+        if(pageCurrent->count < min){ // logic to assess page delete condition
+            pageMarkedToRemove = pageCurrent;
+            min = pageCurrent->count;
         }
-        curr = curr->next;
+        pageCurrent = pageCurrent->next;
     }
-    if (DEBUG==1) printf("EVICTED: p[%03d] c:%02d l:%02f\n", page_to_remove->pid, page_to_remove->count, page_to_remove->last_used);
-    page_to_remove->pid = -1;
-    page_to_remove->page_id = -1;
-    page_to_remove->state = NOT_IN_MEM;
+    if (DEBUG==1) printf("EVICTED: p[%03d] c:%02d l:%02f\n", pageMarkedToRemove->pid, pageMarkedToRemove->count, pageMarkedToRemove->last_used);
+    pageMarkedToRemove->pid = -1;
+    pageMarkedToRemove->page_id = -1;
+    pageMarkedToRemove->state = NOT_IN_MEM;
 }
